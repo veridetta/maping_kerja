@@ -23,6 +23,18 @@ $dat_jum_tidak=mysqli_query($connect, "select * from data where status=0");
 $dat_jum_kerja=mysqli_query($connect, "select * from data where status=1");
 $jum_tidak=mysqli_num_rows($dat_jum_tidak);
 $jum_kerja=mysqli_num_rows($dat_jum_kerja);
+$nomm=1;
+if($_GET['filter']){
+  if($_GET['filter']>1){
+    $filter=0;
+  }else{
+    $filter=$_GET['filter'];
+  }
+  $dat=mysqli_query($connect, "select * from data where status='$filter'");
+}else{
+  $filter='';
+  $dat=mysqli_query($connect, "select * from data");
+}
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
   <a class="navbar-brand" href="#">Maping Pekerjaan</a>
@@ -68,9 +80,9 @@ $jum_kerja=mysqli_num_rows($dat_jum_kerja);
   <div class="col-12 row">
     <div class="col-12">
         <p class="">Filter :</p>
-        <a href="#"><span class="h4 badge badge-secondary" id="bekerja">Bekerja</span></a>
-        <a href="#"><span class="h4 badge badge-secondary" id="belum_bekerja">Belum Bekerja</span></a>
-        <a href="#"><span class="h4 badge badge-success" id="semua">Semua</span></a>
+        <a href="index.php?filter=1"><span class="h4 badge <?php if($_GET['filter']==1){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="bekerja">Bekerja</span></a>
+        <a href="index.php?filter=2"><span class="h4 badge <?php if($_GET['filter']==2){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="belum_bekerja">Belum Bekerja</span></a>
+        <a href="index.php"><span class="h4 badge <?php if($_GET['filter']==''){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="semua">Semua</span></a>
       </div>
     <div class="col-9">
       <div id="map" style="width: 100%; height: 600px;"></div>  
@@ -94,8 +106,6 @@ var contentString = [];
 var locations = [];
 var namae = [];
 <?php 
-$nomm=1;
-  $dat=mysqli_query($connect, "select * from data");
   while($data=mysqli_fetch_array($dat)){
     $nama=$data['nama'];
     $lat=$data['lat'];

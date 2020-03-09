@@ -80,7 +80,7 @@
                     data-show-footer="true"
                     data-side-pagination="server"
                     data-url="get_data.php"
-                    data-response-handler="responseHandler">
+                    data-response-handler="">
                 </table>
 
             </div>
