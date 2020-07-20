@@ -9,9 +9,9 @@ if($_GET){
     $order=isset($_GET['order']) ? $_GET['order'] : 'asc';
     include 'config/connect.php';
     //$id=$_GET['id'];
-    $tot=mysqli_query($connect, "select * from data");
+    $tot=mysqli_query($connect, "select * from datapkh");
     $total_h=mysqli_num_rows($tot);
-    $get=mysqli_query($connect,"Select * from data where nama like '%$search%' order by '$order' limit $limit offset $offset");
+    $get=mysqli_query($connect,"Select * from datapkh where nama like '%$search%' order by '$order' limit $limit offset $offset");
     $hitung=mysqli_num_rows($get);
     $jo=array(
             "judul" => "Get Menu List",
@@ -28,10 +28,10 @@ if($_GET){
                 "no"    =>$nom,
                 "nama"  => $data['nama'],
                 "hp"   => $data['hp'],
-                "pendidikan"  => $data['pendidikan'],
+                "ttl"  => $data['ttl'],
                 "alamat"    => $data['alamat'],
-                "keahlian"      =>$data['keahlian'],
-                "pengalaman"  =>$data['pengalaman'],
+                "kriteriaWarga"      =>$data['kriteriawarga'],
+                "kriteriaPKH"  =>$data['kriteriapkh'],
                 "poto"  => $data['poto']
                 );
         }
@@ -43,10 +43,10 @@ if($_GET){
             "no"    =>$nom,
             "nama"  => $data['nama'],
             "hp"   => "",
-            "pendidikan"  => $data['pendidikan'],
+            "ttl"  => $data['ttl'],
             "alamat"    => $data['alamat'],
-            "keahlian"      =>$data['keahlian'],
-            "pengalaman"  =>$data['pengalaman'],
+            "kriteriaWarga"      =>$data['kriteriawarga'],
+            "kriteriaPKH"  =>$data['kriteriapkh'],
             "poto"  => $data['poto']
             );
         $jo['total']=$hitung;

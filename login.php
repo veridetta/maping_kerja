@@ -16,6 +16,7 @@
 </head>
 <body>
 <?php
+error_reporting(error_reporting() & ~E_NOTICE);
     session_start();
     if($_SESSION){
         header('location:data.php');

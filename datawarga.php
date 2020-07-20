@@ -19,7 +19,7 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-  <a class="navbar-brand" href="#">Maping Pekerjaan</a>
+  <a class="navbar-brand" href="#">Maping Warga</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -71,7 +71,7 @@
 <div class="container" style="padding-top:25px; padding-bottom:25px;">
     <div class="card">
         <div class="card-header">
-            Data Mapping Pekerjaan
+            Data Mapping Warga
         </div>
         <div class="card-body">
             <div class="col-12">
@@ -95,7 +95,7 @@
                     data-page-list="[10, 25, 50, 100, all]"
                     data-show-footer="true"
                     data-side-pagination="server"
-                    data-url="get_data.php"
+                    data-url="get_datawarga.php"
                     data-response-handler="">
                 </table>
 
@@ -196,21 +196,15 @@ function initMap() {};
           title: 'Alamat',
           align: 'center'
         },{
-          field: 'pendidikan',
-          title: 'Pendidikan Terakhir',
+          field: 'ttl',
+          title: 'Tempat, tanggal lahir',
+          align: 'center'
+          
+        },{
+          field: 'penghasilan',
+          title: 'Penghasilan',
+          align: 'center'
           sortable: true,
-          align: 'center'
-          
-        },{
-          field: 'keahlian',
-          title: 'Keahlian',
-          align: 'center'
-          
-        },{
-          field: 'pengalaman',
-          title: 'Pengalaman Bekerja',
-          align: 'center'
-          
         },{
           field: 'poto',
           title: 'Foto',

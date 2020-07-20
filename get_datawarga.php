@@ -11,7 +11,7 @@ if($_GET){
     //$id=$_GET['id'];
     $tot=mysqli_query($connect, "select * from data");
     $total_h=mysqli_num_rows($tot);
-    $get=mysqli_query($connect,"Select * from data where nama like '%$search%' order by '$order' limit $limit offset $offset");
+    $get=mysqli_query($connect,"Select * from datawarga where nama like '%$search%' order by '$order' limit $limit offset $offset");
     $hitung=mysqli_num_rows($get);
     $jo=array(
             "judul" => "Get Menu List",
@@ -28,10 +28,9 @@ if($_GET){
                 "no"    =>$nom,
                 "nama"  => $data['nama'],
                 "hp"   => $data['hp'],
-                "pendidikan"  => $data['pendidikan'],
+                "ttl"  => $data['ttl'],
                 "alamat"    => $data['alamat'],
-                "keahlian"      =>$data['keahlian'],
-                "pengalaman"  =>$data['pengalaman'],
+                "penghasilan"      =>$data['penghasilan'],
                 "poto"  => $data['poto']
                 );
         }
@@ -43,10 +42,9 @@ if($_GET){
             "no"    =>$nom,
             "nama"  => $data['nama'],
             "hp"   => "",
-            "pendidikan"  => $data['pendidikan'],
+            "ttl"  => $data['ttl'],
             "alamat"    => $data['alamat'],
-            "keahlian"      =>$data['keahlian'],
-            "pengalaman"  =>$data['pengalaman'],
+            "penghasilan"      =>$data['penghasilan'],
             "poto"  => $data['poto']
             );
         $jo['total']=$hitung;

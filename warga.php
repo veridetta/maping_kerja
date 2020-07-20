@@ -22,21 +22,32 @@
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 include 'config/connect.php';
-$dat_jum_tidak=mysqli_query($connect, "select * from data where status=0");
-$dat_jum_kerja=mysqli_query($connect, "select * from data where status=1");
-$jum_tidak=mysqli_num_rows($dat_jum_tidak);
-$jum_kerja=mysqli_num_rows($dat_jum_kerja);
+$dat_jum_tidak_mampu=mysqli_query($connect, "select * from datawarga where penghasilan BETWEEN 0 AND 1200000");
+$dat_jum_menengah=mysqli_query($connect, "select * from datawarga where penghasilan BETWEEN 1200000 AND 1800000");
+$dat_jum_mampu=mysqli_query($connect, "select * from datawarga where penghasilan > 1799999");
+$jum_tidak_mampu=mysqli_num_rows($dat_jum_tidak_mampu);
+$jum_menengah=mysqli_num_rows($dat_jum_menengah);
+$jum_mampu=mysqli_num_rows($dat_jum_mampu);
+function rupiah($angka){
+	
+	$hasil_rupiah = "Rp " . number_format($angka,2,',','.');
+	return $hasil_rupiah;
+ 
+}
 $nomm=1;
 if($_GET['filter']){
-  if($_GET['filter']>1){
+  if($_GET['filter']>0){
     $filter=0;
+    $min=$_GET['min'];
+    $max=$_GET['max'];
   }else{
-    $filter=$_GET['filter'];
+    $min=$_GET['min'];
+    $max=$_GET['max'];
   }
-  $dat=mysqli_query($connect, "select * from data where status='$filter'");
+  $dat=mysqli_query($connect, "select * from datawarga where penghasilan BETWEEN $min AND $max");
 }else{
   $filter='';
-  $dat=mysqli_query($connect, "select * from data");
+  $dat=mysqli_query($connect, "select * from datawarga");
 }
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
@@ -46,11 +57,11 @@ if($_GET['filter']){
   </button>
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
     <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Home</a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Kategori</a>
+      <li class="nav-item dropdown active">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Kategori <span class="sr-only">(current)</span></a>
         <div class="dropdown-menu">
           <a class="dropdown-item" href="index.php">Pekerjaan</a>
           <a class="dropdown-item" href="pkh.php">PKH</a>
@@ -60,7 +71,7 @@ if($_GET['filter']){
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Data</a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="data.php">Pekerjaan</a>
+          <a class="dropdown-item" href="index.php">Pekerjaan</a>
           <a class="dropdown-item" href="datapkh.php">PKH</a>
           <a class="dropdown-item" href="datawarga.php">Warga</a>
         </div>
@@ -69,14 +80,9 @@ if($_GET['filter']){
         session_start();
         if($_SESSION){
             ?>
-          <li class="nav-item dropdown active">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="sr-only">(current)</span>Input Data</a>
-            <div class="dropdown-menu">
-            <a class="dropdown-item" href="dashboard.php">Pekerjaan</a>
-            <a class="dropdown-item" href="inputpkh.php">PKH</a>
-            <a class="dropdown-item" href="inputwarga.php">Warga</a>
-            </div>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.php">Dashboard</a>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="logout.php">Logout</a>
           </li>
@@ -95,15 +101,16 @@ if($_GET['filter']){
 
 <div class="container" style="padding-top:25px; padding-bottom:25px;">
   <div>
-    <h3 class="text-center" style="padding-bottom:25px;">Mapping Pekerjaan Warga Argasunya</h3>
+    <h3 class="text-center" style="padding-bottom:25px;">Mapping Warga Argasunya</h3>
     <hr>
   </div>  
   <div class="col-12 row">
     <div class="col-12">
         <p class="">Filter :</p>
-        <a href="index.php?filter=1"><span class="h4 badge <?php if($_GET['filter']==1){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="bekerja">Bekerja</span></a>
-        <a href="index.php?filter=2"><span class="h4 badge <?php if($_GET['filter']==2){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="belum_bekerja">Belum Bekerja</span></a>
-        <a href="index.php"><span class="h4 badge <?php if($_GET['filter']==''){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="semua">Semua</span></a>
+        <a href="warga.php?filter=1&&min=0&max=1200000"><span class="h4 badge <?php if($_GET['filter']==1){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="kurang_mampu">Kurang Mampu</span></a>
+        <a href="warga.php?filter=2&&min=1200000&max=1800000"><span class="h4 badge <?php if($_GET['filter']==2){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="menengah">Menengah</span></a>
+        <a href="warga.php?filter=3&&min=18000000&max=120000000"><span class="h4 badge <?php if($_GET['filter']==3){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="Mampu">Mampu</span></a>
+        <a href="warga.php"><span class="h4 badge <?php if($_GET['filter']==''){echo 'badge-success';}else{ echo 'badge-primary';}?>" id="semua">Semua</span></a>
       </div>
     <div class="col-9">
       <div id="map" style="width: 100%; height: 600px;"></div>  
@@ -112,8 +119,9 @@ if($_GET['filter']){
     <div class="card">
       <div class="card-header">Statistik</div>
         <div class="card-body">
-          <p class=""><i class="fas fa-briefcase"></i> Bekerja : <span class="h4 badge badge-warning" id="semua"><?php echo $jum_kerja;?> Orang</span></p>
-          <p class=""><i class="fas fa-user"></i> Belum bekerja : <span class="h4 badge badge-danger" id="semua"><?php echo $jum_tidak;?> Orang</span></p>
+          <p class=""><i class="fas fa-user"></i> Tidak Mampu : <span class="h4 badge badge-warning" id="semua"><?php echo $jum_tidak_mampu;?> Orang</span></p>
+          <p class=""><i class="fas fa-user"></i> Menengah : <span class="h4 badge badge-danger" id="semua"><?php echo $jum_menengah;?> Orang</span></p>
+          <p class=""><i class="fas fa-user"></i> Mampu : <span class="h4 badge badge-success" id="semua"><?php echo $jum_mampu;?> Orang</span></p>
         </div>
       </div>
     </div>
@@ -128,21 +136,13 @@ var namae = [];
 <?php 
   while($data=mysqli_fetch_array($dat)){
     $nama=$data['nama'];
+    $ttl=$data['ttl'];
     $lat=$data['lat'];
     $lng=$data['lng'];
     $hp=$data['hp'];
-    $pengalaman=$data['pengalaman'];
-    if($data['status']>0){
-      $status='Sedang Bekerja';
-      $pekerjaan=$data['pekerjaan'];
-    }else{
-      $status="Tidak Bekerja";
-    }
+    $penghasilan=$data['penghasilan'];
     $poto=$data['poto'];
-    $pendidikan=$data['pendidikan'];
-    $keahlian=$data['keahlian'];
-    $lengkap='<div id="content"><div id="siteNotice"></div><h1 id="firstHeading" class="firstHeading">'.$nama.'</h1><div id="bodyContent"><div class="row col-12"><div class="col-3 text-center"><img src="upload/'.$poto.'" width="80px" height="100px"></div><div class="col-9"><span>Kontak : <b>'.$hp.'</b></span><p style="margin-bottom:0" class=""><i class="fas fa-id-card"></i> Status : <span class="h4 badge badge-success" >'.$status.'</span><i class="fas fa-cap-graduation"></i></p> <p style="margin-bottom:0">Pendidikan Terkahir : <span class="h4 badge badge-warning" >'.$pendidikan.'</span></p><p class="" style="margin-bottom:0"><span class="h4 badge badge-danger" ><i class="fas fa-file"></i> Keahlian</span></p><hr style="margin-top:0"><p>'.$keahlian.'</p><p class="" style="margin-bottom:0"><span class="h4 badge badge-primary" ><i class="fas fa-briefcase"></i> Pengalaman Bekerja</span></p><hr style="margin-top:0"><p>'.$pengalaman.'</p></div></div></div>';
-    ?>
+    $lengkap='<div id="content"><div id="siteNotice"></div><h1 id="firstHeading" class="firstHeading">'.$nama.'</h1><div id="bodyContent"><div class="row col-12"><div class="col-3 text-center"><img src="upload/'.$poto.'" width="80px" height="100px"></div><div class="col-9"><i class="fas fa-calendar"></i><span>Tempat,tanggal lahir : <b>'.$ttl.'</b></span><p style="margin-bottom:0" class=""><i class="fas fa-mobile"></i><span>Kontak : <b>'.$hp.'</b></span></p><p style="margin-bottom:0" class=""><i class="fas fa-money-bill"></i> Penghasilan : <span class="h4 badge badge-success" >'.rupiah($penghasilan).'</span></p></div></div></div>';?>
     locations.push(['<?php echo $nama;?>',<?php echo $lat;?>,<?php echo $lng;?>,<?php echo $nomm;?>]);
     //locations[0].item.push('Bondi Beach');
     //locations[1].item.push(-33.890542);

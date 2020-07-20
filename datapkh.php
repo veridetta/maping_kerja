@@ -71,7 +71,7 @@
 <div class="container" style="padding-top:25px; padding-bottom:25px;">
     <div class="card">
         <div class="card-header">
-            Data Mapping Pekerjaan
+            Data Mapping PKH
         </div>
         <div class="card-body">
             <div class="col-12">
@@ -95,7 +95,7 @@
                     data-page-list="[10, 25, 50, 100, all]"
                     data-show-footer="true"
                     data-side-pagination="server"
-                    data-url="get_data.php"
+                    data-url="get_datapkh.php"
                     data-response-handler="">
                 </table>
 
@@ -196,21 +196,20 @@ function initMap() {};
           title: 'Alamat',
           align: 'center'
         },{
-          field: 'pendidikan',
-          title: 'Pendidikan Terakhir',
-          sortable: true,
+          field: 'ttl',
+          title: 'Tempat, tanggal lahir',
           align: 'center'
           
         },{
-          field: 'keahlian',
-          title: 'Keahlian',
-          align: 'center'
-          
+          field: 'kriteriaWarga',
+          title: 'Kriteria Warga',
+          align: 'center',
+          sortable: true
         },{
-          field: 'pengalaman',
-          title: 'Pengalaman Bekerja',
-          align: 'center'
-          
+          field: 'kriteriaPKH',
+          title: 'Kriteria PKH',
+          align: 'center',
+          sortable: true
         },{
           field: 'poto',
           title: 'Foto',

@@ -81,18 +81,13 @@ error_reporting(error_reporting() & ~E_NOTICE);
         $errorz=$_FILES['poto']['error'];
         $nama=mysqli_escape_string($connect, $_POST['nama']);
         $hp=mysqli_escape_string($connect, $_POST['hp']);
+        $ttl=mysqli_escape_string($connect, $_POST['ttl']);
         $alamat=mysqli_escape_string($connect, $_POST['alamat']);
-        $keahlian=mysqli_escape_string($connect, $_POST['keahlian']);
-        $pengalaman=mysqli_escape_string($connect, $_POST['pengalaman']);
-        $pendidikan=mysqli_escape_string($connect, $_POST['pendidikan']);
-        $ktp=mysqli_escape_string($connect, $_POST['ktp']);
+        $penghasilan=mysqli_escape_string($connect, $_POST['penghasilan']);
         $poto=$nama_file;
-        $pekerjaan=mysqli_escape_string($connect, $_POST['pekerjaan']);
-        $status=mysqli_escape_string($connect, $_POST['status']);
         $partner=$_SESSION['id'];
         $lat=mysqli_escape_string($connect, $_POST['lat']);
         $lng=mysqli_escape_string($connect, $_POST['lng']);
-    
         if($errorz>0){
             $error="Terjadi kesalahan awal saat upload photo, silahkan coba lagi atau ganti dengan yang lain";
         }else{
@@ -101,7 +96,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
             }else{
                 if (is_dir($target_dir) && is_writable($target_dir)) {
                     if (move_uploaded_file($nama_tmp_poto, $target_file)) {
-                        $insert=mysqli_query($connect, "insert into data(nama, hp, alamat, keahlian, pengalaman, pendidikan, ktp, poto, status, pekerjaan, partner, tanggal, lat, lng) VALUES ('$nama','$hp','$alamat','$keahlian','$pengalaman','$pendidikan','$ktp','$poto','$status','$pekerjaan','$partner','$tanggal','$lat','$lng')");
+                        $insert=mysqli_query($connect, "insert into datawarga(nama, hp, ttl, alamat, penghasilan, poto, partner, tanggal, lat, lng) VALUES ('$nama','$hp','$ttl','$alamat','$penghasilan','$poto','$partner','$tanggal','$lat','$lng')");
                         if($insert){
                             $error="Input data berhasil.";
                             $status=1;
@@ -132,8 +127,21 @@ error_reporting(error_reporting() & ~E_NOTICE);
       <li class="nav-item ">
         <a class="nav-link" href="index.php">Home </a>
       </li>
-      <li class="nav-item ">
-        <a class="nav-link" href="data.php">Data</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Kategori</a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="index.php">Pekerjaan</a>
+          <a class="dropdown-item" href="pkh.php">PKH</a>
+          <a class="dropdown-item" href="warga.php">Warga</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Data</a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="data.php">Pekerjaan</a>
+          <a class="dropdown-item" href="datapkh.php">PKH</a>
+          <a class="dropdown-item" href="datawarga.php">Warga</a>
+        </div>
       </li>
       <?php
         session_start();
@@ -199,7 +207,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
                                             <p>Alamat : <?php echo $alamat_partner;?></p>
                                         </div>
                                         <div class="card-footer">
-                                            <form method="post" action="dashboard.php">
+                                            <form method="post" action="inputwarga.php">
                                                 <input type="hidden" id="id_partner_acc" name="id_partner_acc" value="<?php echo $id_partner_acc;?>">
                                                 <input type="submit" name="btn_acc" id="btn_acc" class="btn btn-block btn-warning" value="ACC">
                                             </form>
@@ -218,14 +226,14 @@ error_reporting(error_reporting() & ~E_NOTICE);
                 <?php
             }
             ?>
-            <p class="h3">Input Data Pekerjaan</p>
+            <p class="h3">Input Data Warga</p>
             <hr>
             <div class="card">
                 <div class="card-header">
                     Input Data Baru
                 </div>
                 <div class="card-body">
-                <form method="post" id="form_daftar" enctype="multipart/form-data" action="dashboard.php">
+                <form method="post" id="form_daftar" enctype="multipart/form-data" action="inputwarga.php">
                     <div class="col-12 row justify-content-center">
                         <div class="col-lg-6 col-xl-6 col-md-6 col-xs-12 col-sm-12">
                             <div class="form-group">
@@ -239,6 +247,14 @@ error_reporting(error_reporting() & ~E_NOTICE);
                             <div class="form-group">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
+                                <input required placeholder="Tempat, tanggal lahir" type="text" id="ttl" name="ttl" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-phone"></i></span>
                                 </div>
                                 <input required placeholder="No HP" type="text" id="hp" name="hp" class="form-control">
@@ -247,17 +263,9 @@ error_reporting(error_reporting() & ~E_NOTICE);
                             <div class="form-group">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-id-card"></i></span>
+                                    <span class="input-group-text"><i class="fa fa-money-bill"></i></span>
                                 </div>
-                                <input required placeholder="No KTP" type="text" id="ktp" name="ktp" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-graduation-cap"></i></span>
-                                </div>
-                                <input required placeholder="Pendidikan Terakhir" type="text" id="pendidikan" name="pendidikan" class="form-control">
+                                <input required placeholder="Penghasilan perbulan 1000000" type="number" id="penghasilan" name="penghasilan" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -268,40 +276,9 @@ error_reporting(error_reporting() & ~E_NOTICE);
                                 <textarea required rows="3" class="form-control" id="alamat" name="alamat" placeholder="alamat"></textarea>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select name="status" id="status" class="col-12 form-control">
-                                    <option value="1">Bekerja</option>
-                                    <option value="0">Tidak Bekerja</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
-                                </div>
-                                <input required placeholder="Pekerjaan Sekarang" type="text" id="pekerjaan" name="pekerjaan" class="form-control">
-                                </div>
-                            </div>
                         </div>
                         <div class="col-lg-6 col-xl-6 col-md-6 col-xs-12 col-sm-12">
                             
-                            <div class="form-group">
-                                <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-file"></i></span>
-                                </div>
-                                <textarea required rows="3" class="form-control" id="keahlian" name="keahlian" placeholder="keahlian"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
-                                </div>
-                                <textarea required rows="3" class="form-control" id="pengalaman" name="pengalaman" placeholder="Pengalaman Bekerja"></textarea>
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label>Upload Image <small>max 500kb</small></label>
                                 <div class="input-group">
