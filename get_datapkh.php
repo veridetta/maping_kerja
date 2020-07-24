@@ -32,6 +32,7 @@ if($_GET){
                 "alamat"    => $data['alamat'],
                 "kriteriaWarga"      =>$data['kriteriawarga'],
                 "kriteriaPKH"  =>$data['kriteriapkh'],
+                "id"  =>$data['id'],
                 "poto"  => $data['poto']
                 );
         }
@@ -47,6 +48,7 @@ if($_GET){
             "alamat"    => $data['alamat'],
             "kriteriaWarga"      =>$data['kriteriawarga'],
             "kriteriaPKH"  =>$data['kriteriapkh'],
+            "id"  =>$data['id'],
             "poto"  => $data['poto']
             );
         $jo['total']=$hitung;

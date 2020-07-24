@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Input Data</title>
-  <meta charset="utf-8">
+  <title><?php error_reporting(error_reporting() & ~E_NOTICE); if($_GET['id']!=""){echo "Edit Data";}else{echo "Input Data";};?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
@@ -69,57 +69,74 @@ error_reporting(error_reporting() & ~E_NOTICE);
         }
     }
     if($_POST['daftar_submit']){
-        $target_dir = "upload/";
-        date_default_timezone_set('Asia/Jakarta');
-        $tanggal=date('d-m-Y-H-i-s');
-        $tgl=date('d-m-Y H:i:s');
-        $nama_file=$tanggal.basename($_FILES["poto"]["name"]);
-        $target_file = $target_dir . $nama_file;
-        $nama_tmp_poto= $_FILES['poto']['tmp_name'];
-        $nama_poto=$_FILES['poto']['name'];
-        $ukuran_poto=$_FILES['poto']['size'];
-        $errorz=$_FILES['poto']['error'];
-        $nama=mysqli_escape_string($connect, $_POST['nama']);
-        $hp=mysqli_escape_string($connect, $_POST['hp']);
-        $alamat=mysqli_escape_string($connect, $_POST['alamat']);
-        $keahlian=mysqli_escape_string($connect, $_POST['keahlian']);
-        $pengalaman=mysqli_escape_string($connect, $_POST['pengalaman']);
-        $pendidikan=mysqli_escape_string($connect, $_POST['pendidikan']);
-        $ktp=mysqli_escape_string($connect, $_POST['ktp']);
-        $poto=$nama_file;
-        $pekerjaan=mysqli_escape_string($connect, $_POST['pekerjaan']);
-        $status=mysqli_escape_string($connect, $_POST['status']);
-        $partner=$_SESSION['id'];
-        $lat=mysqli_escape_string($connect, $_POST['lat']);
-        $lng=mysqli_escape_string($connect, $_POST['lng']);
-    
-        if($errorz>0){
-            $error="Terjadi kesalahan awal saat upload photo, silahkan coba lagi atau ganti dengan yang lain";
-        }else{
-            if($ukuran_poto>500000){
-                $error="Ukuran photo lebih dari 500kb";
+        if($_POST['idx']=="kosong"){
+            $target_dir = "upload/";
+            date_default_timezone_set('Asia/Jakarta');
+            $tanggal=date('d-m-Y-H-i-s');
+            $tgl=date('d-m-Y H:i:s');
+            $nama_file=$tanggal.basename($_FILES["poto"]["name"]);
+            $target_file = $target_dir . $nama_file;
+            $nama_tmp_poto= $_FILES['poto']['tmp_name'];
+            $nama_poto=$_FILES['poto']['name'];
+            $ukuran_poto=$_FILES['poto']['size'];
+            $errorz=$_FILES['poto']['error'];
+            $nama=mysqli_escape_string($connect, $_POST['nama']);
+            $hp=mysqli_escape_string($connect, $_POST['hp']);
+            $alamat=mysqli_escape_string($connect, $_POST['alamat']);
+            $keahlian=mysqli_escape_string($connect, $_POST['keahlian']);
+            $pengalaman=mysqli_escape_string($connect, $_POST['pengalaman']);
+            $pendidikan=mysqli_escape_string($connect, $_POST['pendidikan']);
+            $ktp=mysqli_escape_string($connect, $_POST['ktp']);
+            $poto=$nama_file;
+            $pekerjaan=mysqli_escape_string($connect, $_POST['pekerjaan']);
+            $status=mysqli_escape_string($connect, $_POST['status']);
+            $partner=$_SESSION['id'];
+            $lat=mysqli_escape_string($connect, $_POST['lat']);
+            $lng=mysqli_escape_string($connect, $_POST['lng']);
+        
+            if($errorz>0){
+                $error="Terjadi kesalahan awal saat upload photo, silahkan coba lagi atau ganti dengan yang lain";
             }else{
-                if (is_dir($target_dir) && is_writable($target_dir)) {
-                    if (move_uploaded_file($nama_tmp_poto, $target_file)) {
-                        $insert=mysqli_query($connect, "insert into data(nama, hp, alamat, keahlian, pengalaman, pendidikan, ktp, poto, status, pekerjaan, partner, tanggal, lat, lng) VALUES ('$nama','$hp','$alamat','$keahlian','$pengalaman','$pendidikan','$ktp','$poto','$status','$pekerjaan','$partner','$tanggal','$lat','$lng')");
-                        if($insert){
-                            $error="Input data berhasil.";
-                            $status=1;
-                        }else{
-                            $error="Terjadi kesalahan saat menginput data, silahkan coba lagi.".mysqli_error($connect);;
+                if($ukuran_poto>500000){
+                    $error="Ukuran photo lebih dari 500kb";
+                }else{
+                    if (is_dir($target_dir) && is_writable($target_dir)) {
+                        if (move_uploaded_file($nama_tmp_poto, $target_file)) {
+                            $insert=mysqli_query($connect, "insert into data(nama, hp, alamat, keahlian, pengalaman, pendidikan, ktp, poto, status, pekerjaan, partner, tanggal, lat, lng) VALUES ('$nama','$hp','$alamat','$keahlian','$pengalaman','$pendidikan','$ktp','$poto','$status','$pekerjaan','$partner','$tanggal','$lat','$lng')");
+                            if($insert){
+                                $error="Input data berhasil.";
+                                $status=1;
+                            }else{
+                                $error="Terjadi kesalahan saat menginput data, silahkan coba lagi.".mysqli_error($connect);;
+                            }
+                        } else {
+                            $error="Terjadi kesalahan saat upload photo, silahkan coba lagi atau ganti dengan yang lain";
                         }
                     } else {
-                        $error="Terjadi kesalahan saat upload photo, silahkan coba lagi atau ganti dengan yang lain";
-                    }
-                } else {
-                    $error='Upload directory is not writable, or does not exist.';
-                    header( "refresh:3; url=login.php" ); 
+                        $error='Upload directory is not writable, or does not exist.';
+                        header( "refresh:3; url=login.php" ); 
+                    } 
                 }
-                
+            }
+
+        }else{
+            if($_POST['idx']!=""){
+                //echo $_POST['idx'];
+            $nama=mysqli_escape_string($connect, $_POST['nama']);
+            $hp=mysqli_escape_string($connect, $_POST['hp']);
+            $alamat=mysqli_escape_string($connect, $_POST['alamat']);
+            $keahlian=mysqli_escape_string($connect, $_POST['keahlian']);
+            $pengalaman=mysqli_escape_string($connect, $_POST['pengalaman']);
+            $pendidikan=mysqli_escape_string($connect, $_POST['pendidikan']);
+            $ubah=mysqli_query($connect, "Update data set nama='$nama', hp='$hp', alamat='$alamat',keahlian='$keahlian',pengalaman='$pengalaman',pendidikan='$pendidikan' where id='$_POST[idx]'");
+            if($ubah){
+                $error="Edit data berhasil.";
+                $status=1;
+            }else{
+                $error="Terjadi kesalahan saat mengedit data, silahkan coba lagi.".mysqli_error($connect);;
+            }   
             }
         }
-        ?>
-        <?php
     }
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
@@ -137,7 +154,26 @@ error_reporting(error_reporting() & ~E_NOTICE);
       </li>
       <?php
         session_start();
+        $inama='';
+        $iid='kosong';
+        $inohp='';
+        $ipendidikan='';
+        $ikeahlian='';
+        $ipengalaman='';
         if($_SESSION){
+            if($_GET){
+                if($_GET['id']){
+                    $iid=$_GET['id'];
+                    $select=mysqli_query($connect, "select * from data where id='$iid'");
+                    while($ambil=mysqli_fetch_array($select)){
+                        $inama=$ambil['nama'];
+                        $inohp=$ambil['hp'];
+                        $ipendidikan=$ambil['pendidikan'];
+                        $ikeahlian=$ambil['keahlian'];
+                        $ipengalaman=$ambil['pengalaman'];
+                    }
+                }
+            }
             ?>
          <li class="nav-item dropdown active">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="sr-only">(current)</span>Input Data</a>
@@ -218,11 +254,11 @@ error_reporting(error_reporting() & ~E_NOTICE);
                 <?php
             }
             ?>
-            <p class="h3">Input Data Pekerjaan</p>
+            <p class="h3"><?php if($_GET['id']!=""){echo "Edit Data Pekerjaan";}else{echo "Input Data Pekerjaan";};?></p>
             <hr>
             <div class="card">
                 <div class="card-header">
-                    Input Data Baru
+                <?php if($_GET['id']!=""){echo "Edit Data";}else{echo "Input Data Baru";};?>
                 </div>
                 <div class="card-body">
                 <form method="post" id="form_daftar" enctype="multipart/form-data" action="dashboard.php">
@@ -233,7 +269,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-user"></i></span>
                                 </div>
-                                <input required placeholder="Nama Lengkap" type="text" id="nama" name="nama" class="form-control">
+                                <input required placeholder="Nama Lengkap" value="<?php echo $inama;?>" type="text" id="nama" name="nama" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -241,7 +277,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-phone"></i></span>
                                 </div>
-                                <input required placeholder="No HP" type="text" id="hp" name="hp" class="form-control">
+                                <input required placeholder="No HP" value="<?php echo $inohp;?>" type="text" id="hp" name="hp" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -257,7 +293,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-graduation-cap"></i></span>
                                 </div>
-                                <input required placeholder="Pendidikan Terakhir" type="text" id="pendidikan" name="pendidikan" class="form-control">
+                                <input required placeholder="Pendidikan Terakhir" value="<?php echo $ipendidikan;?>" type="text" id="pendidikan" name="pendidikan" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -265,7 +301,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-map"></i></span>
                                 </div>
-                                <textarea required rows="3" class="form-control" id="alamat" name="alamat" placeholder="alamat"></textarea>
+                                <textarea required rows="3" class="form-control" value="<?php echo $ipengalaman;?>" id="alamat" name="alamat" placeholder="alamat"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -291,7 +327,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                                 </div>
-                                <textarea required rows="3" class="form-control" id="keahlian" name="keahlian" placeholder="keahlian"></textarea>
+                                <textarea required rows="3" class="form-control" id="keahlian" name="keahlian" value="<?php echo $ikeahlian;?>" placeholder="keahlian"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -326,6 +362,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
                             <input type="submit" name="daftar_submit" value="Masukkan Data" id="daftar_btn" class="btn btn-success form-control">
                         </div>
                     </div>
+                    <input  type="hidden" name="idx" id="idx" value="<?php echo $iid;?>" id="lat">
                     <input  type="hidden" name="lat" value="" id="lat">
                     <input  type="hidden" name="lng" value="" id="lng">
                 </form>

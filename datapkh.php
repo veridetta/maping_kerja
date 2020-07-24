@@ -15,9 +15,30 @@
   <!--<script src="assets/js/map.js"></script>-->
   <!-- Latest compiled and minified JavaScript -->
 <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+<style>
+.modal {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) { 
+  .modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+</style>
 </head>
 <body>
-
+<?php 
+session_start();?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
   <a class="navbar-brand" href="#">Maping Pekerjaan</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +77,19 @@
             <a class="nav-link" href="logout.php">Logout</a>
           </li>
             <?php
+             if($_SESSION['role']=="admin"){
+              if($_POST['remove']){
+                include 'config/connect.php';
+                $idremovee=$_POST['idremove'];
+                $hapus=mysqli_query($connect, "DELETE from datapkh where id='$idremovee'");
+                if($hapus){
+                  $error="Hapus data berhasil.";
+                  $status=1;
+              }else{
+                  $error="Terjadi kesalahan saat menghapus data, silahkan coba lagi.".mysqli_error($connect);;
+              }
+              }
+            }
         }else{
           ?>
           <li class="nav-item">
@@ -67,7 +101,12 @@
     </ul>
   </div>
 </nav>
-
+<div class="alert alert-warning alert-dismissible fade" role="alert">
+  <strong>Info!</strong> <?php echo $error;?>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 <div class="container" style="padding-top:25px; padding-bottom:25px;">
     <div class="card">
         <div class="card-header">
@@ -103,7 +142,26 @@
         </div>
     </div>
 </div>
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="h3 text-center">Hapus Data</p>
+        <p class="text-center">Yakin makan menghapus data?</p>
+      </div>
+      <div class="modal-footer">
+        <form method="post" action="data.php"><input type="hidden" name="idremove" id="idremove" value="">
+        <input type="submit" name="remove" class="btn btn-danger" value="Yakin"></form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
+<?php if($_POST){
+            echo "$('.alert').addClass('show');";
+        };?>
 function initMap() {};
   var $table = $('#table')
   var $remove = $('#remove')
@@ -133,25 +191,49 @@ function initMap() {};
 
   function operateFormatter(value, row, index) {
     return [
-      '<a class="like" href="javascript:void(0)" title="Like">',
-      '<i class="fa fa-heart"></i>',
+      '<a class="edit btn btn-primary" href="javascript:void(0)" title="Like" style="margin-bottom:12px;">',
+      '<i class="fa fa-edit"></i>',
       '</a>  ',
-      '<a class="remove" href="javascript:void(0)" title="Remove">',
+      '<a class="remove btn btn-danger" href="javascript:void(0)" title="Remove" style="margin-bottom:12px;">',
       '<i class="fa fa-trash"></i>',
       '</a>'
     ].join('')
   }
 
   window.operateEvents = {
-    'click .like': function (e, value, row, index) {
-      alert('You click like action, row: ' + JSON.stringify(row))
+    'click .edit': function (e, value, row, index) {
+      //alert('You click like action, row: ' + JSON.stringify(row))
+      function replacer(string) {
+        var data = string;
+        var convertedData = JSON.parse(data);
+        return convertedData.id;
+      }
+      var jsson = JSON.stringify(row, ['id']);
+      location.href = "http://localhost/maping_kerja/inputpkh.php?id="+replacer(jsson);
+      //alert(replacer(jsson));
     },
     'click .remove': function (e, value, row, index) {
-      $table.bootstrapTable('remove', {
-        field: 'id',
-        values: [row.id]
-      })
+      //$table.bootstrapTable('remove', {
+        //field: 'id',
+        //values: [row.id]
+      //})
+      function replacer(string) {
+        var data = string;
+        var convertedData = JSON.parse(data);
+        return convertedData.id;
+      }
+      var jsson = JSON.stringify(row, ['id']);
+      remove(replacer(jsson));
     }
+  }
+  function remove(id){
+    $("#myModal").modal('show');
+    var idnya=id;
+    $("#idremove").val(id);
+  }
+  function editData(id){
+    var url = "inputpkh.php?id="+id;
+    windows.open(url);
   }
 
   function totalTextFormatter(data) {
@@ -187,6 +269,10 @@ function initMap() {};
           footerFormatter: totalNameFormatter,
           sortable: true,
           align: 'center'
+        }, {
+          field: 'id',
+          title: 'id',
+          visible : false
         }, {
           field: 'hp',
           title: 'No HP',
