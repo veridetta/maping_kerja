@@ -38,7 +38,8 @@
 </head>
 <body>
 <?php 
-session_start();?>
+session_start();
+?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
   <a class="navbar-brand" href="#">Maping Pekerjaan</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -151,7 +152,7 @@ session_start();?>
         <p class="text-center">Yakin makan menghapus data?</p>
       </div>
       <div class="modal-footer">
-        <form method="post" action="data.php"><input type="hidden" name="idremove" id="idremove" value="">
+        <form method="post" action="datapkh.php"><input type="hidden" name="idremove" id="idremove" value="">
         <input type="submit" name="remove" class="btn btn-danger" value="Yakin"></form>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
       </div>
@@ -301,7 +302,7 @@ function initMap() {};
           title: 'Foto',
           align: 'center'
           
-        }<?php if($_SESSION['user']=="admin"){
+        }<?php if($_SESSION['role']=="admin"){
             ?>
             , {
           field: 'operate',

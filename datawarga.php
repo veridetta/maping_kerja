@@ -149,7 +149,7 @@ session_start();?>
         <p class="text-center">Yakin makan menghapus data?</p>
       </div>
       <div class="modal-footer">
-        <form method="post" action="data.php"><input type="hidden" name="idremove" id="idremove" value="">
+        <form method="post" action="datawarga.php"><input type="hidden" name="idremove" id="idremove" value="">
         <input type="submit" name="remove" class="btn btn-danger" value="Yakin"></form>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
       </div>
@@ -288,7 +288,7 @@ function initMap() {};
           title: 'Foto',
           align: 'center'
           
-        }<?php if($_SESSION['user']=="admin"){
+        }<?php if($_SESSION['role']=="admin"){
             ?>
             , {
           field: 'operate',

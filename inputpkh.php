@@ -120,7 +120,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
                 }else{
                     if (is_dir($target_dir) && is_writable($target_dir)) {
                         if (move_uploaded_file($nama_tmp_poto, $target_file)) {
-                            $insert=mysqli_query($connect, "insert into datapkh(nama, hp, alamat, ttl, kriteriawarga, kriteriapkh, kode_kriteriawarga, poto, kode_kriteriapkh, partner, tanggal, lat, lng) VALUES ('$nama','$hp','$alamat','$ttl','$kriteriawargatext','$kriteriawpkhtext','$kriteriawarga','$poto','$kriteriapkh','$partner','$tanggal','$lat','$lng')");
+                            $insert=mysqli_query($connect, "insert into datapkh(nama, hp, alamat, ttl, kriteriawarga, kriteriapkh, kode_kriteriawarga, poto, kode_kriteriapkh, partner, tanggal, lat, lng) VALUES ('$nama','$hp','$alamat','$ttl','$kriteriawargatext','$kriteriapkhtext','$kriteriawarga','$poto','$kriteriapkh','$partner','$tanggal','$lat','$lng')");
                             if($insert){
                                 $error="Input data berhasil.";
                                 $status=1;
